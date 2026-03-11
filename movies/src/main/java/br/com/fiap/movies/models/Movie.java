@@ -8,6 +8,7 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 public class Movie {
+    private Long id;
     private String title;
     private String synopsis;
     private Integer rating;
