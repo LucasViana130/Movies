@@ -1,6 +1,9 @@
 package br.com.fiap.movies.services;
 
 import br.com.fiap.movies.models.Movie;
+import br.com.fiap.movies.repositories.MovieRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,24 +17,19 @@ import java.util.Random;
 @Service
 public class MovieService {
 
-    private List<Movie> repository = new ArrayList<>();
+    @Autowired
+    private MovieRepository repository;
 
     public List<Movie> getMovies(){
-        return repository;
+        return repository.findAll();
     }
 
     public Movie addMovie(Movie movie){
-        var id = Math.abs( new Random().nextLong());
-        movie.setId(id);
-        repository.add(movie);
-        return movie;
+        return repository.save(movie);
     }
 
     public Optional<Movie> getMovieById(Long id) {
-       return repository
-               .stream()
-               .filter( movie -> movie.getId().equals(id))
-               .findFirst();
+       return repository.findById(id);
     }
 
     public void deleteMovie(Long id) {
@@ -40,7 +38,7 @@ public class MovieService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Filme não encontrado");
         }
 
-       repository.remove(optionalMovie.get());
+       repository.deleteById(id);
     }
 
     public Movie updateMovie(Long id, Movie newMovie) {
@@ -48,14 +46,8 @@ public class MovieService {
         if(optionalMovie.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Filme não encontrado");
         }
-
-        var existingMovie = optionalMovie.get();
-
+        //BeanUtils.copyProperties(newMovie, movie, "id");
         newMovie.setId(id);
-
-        repository.remove(existingMovie);
-        repository.add(newMovie);
-
-        return newMovie;
+        return repository.save(newMovie);
     }
 }
