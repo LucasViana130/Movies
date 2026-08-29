@@ -1,0 +1,8 @@
+FROM mysql:8.0
+
+ENV MYSQL_ROOT_PASSWORD=senha-movies
+ENV MYSQL_DATABASE=db-movies
+ENV MYSQL_USER=user-movies
+ENV MYSQL_PASSWORD=senha-movies
+
+COPY database/ddl.sql /docker-entrypoint-initdb.d/01-ddl.sql
