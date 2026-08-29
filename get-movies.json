@@ -1,0 +1,4 @@
+{
+  "endpoint": "/movies",
+  "method": "GET"
+}
